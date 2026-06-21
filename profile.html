@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff">
+    <title>Profile · Simha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ─── ROOT ─── */
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --gold-gradient: linear-gradient(135deg, #c9a84c 0%, #f5e6b8 40%, #c9a84c 70%, #a8892e 100%);
+            --bg: #f4f7fb;
+            --surface: #ffffff;
+            --card: #ffffff;
+            --border: #e8ecf0;
+            --text: #0d0d0d;
+            --text-2: #6b727a;
+            --text-3: #a0a7ae;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .dark {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --card: #1a1a1a;
+            --border: #2a2a2a;
+            --text: #f5f0eb;
+            --text-2: #a8a09a;
+            --text-3: #6b6a6a;
+            --shadow: 0 2px 12px rgba(0,0,0,0.3);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background var(--transition), color var(--transition);
+        }
+        .app { max-width: 1200px; margin: 0 auto; padding: 0 16px 80px; }
+
+        /* ─── TOP NAV ─── */
+        .top-nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow);
+            border-radius: 0 0 var(--radius) var(--radius);
+            margin-bottom: 8px;
+        }
+        .top-nav .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Playfair Display', serif;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .top-nav .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+            align-items: center;
+        }
+        .top-nav .nav-links a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-2);
+            transition: all var(--transition);
+            padding: 6px 12px;
+            border-radius: 50px;
+            text-decoration: none;
+        }
+        .top-nav .nav-links a:hover {
+            color: var(--text);
+            background: rgba(201,168,76,0.06);
+        }
+        .top-nav .nav-links a.active {
+            color: var(--gold);
+            background: rgba(201,168,76,0.08);
+        }
+        .top-nav .nav-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .top-nav .nav-actions button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-2);
+            transition: all var(--transition);
+            position: relative;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .top-nav .nav-actions button:hover {
+            background: rgba(201,168,76,0.06);
+            color: var(--text);
+        }
+        .top-nav .nav-actions button .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            font-size: 8px;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--surface);
+        }
+        .top-nav .nav-actions button .badge.show { display: flex; }
+        .top-nav .nav-actions .theme-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--text-2);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+        }
+        .top-nav .nav-actions .theme-toggle:hover {
+            background: rgba(201,168,76,0.06);
+            color: var(--text);
+        }
+        .top-nav .nav-actions .profile-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 2px solid transparent;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        .top-nav .nav-actions .profile-btn:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+        }
+        .top-nav .nav-actions .profile-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .top-nav .nav-actions .admin-btn {
+            padding: 6px 16px;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 11px;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+        }
+        .top-nav .nav-actions .admin-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(201,168,76,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .top-nav .nav-links a { font-size: 11px; padding: 4px 8px; }
+            .top-nav .nav-links { gap: 4px; }
+            .top-nav .logo { font-size: 16px; }
+            .top-nav .nav-actions .admin-btn { font-size: 9px; padding: 4px 12px; }
+        }
+        @media (max-width: 480px) {
+            .top-nav { padding: 0 10px; height: 54px; flex-wrap: wrap; gap: 4px; }
+            .top-nav .nav-links { order: 3; width: 100%; justify-content: center; gap: 2px; }
+            .top-nav .nav-links a { font-size: 10px; padding: 3px 6px; }
+            .top-nav .nav-actions { gap: 2px; }
+            .top-nav .nav-actions button { width: 32px; height: 32px; font-size: 15px; }
+            .top-nav .nav-actions .profile-btn { width: 30px; height: 30px; font-size: 12px; }
+        }
+
+        /* ─── PAGE HEADER ─── */
+        .page-header {
+            margin: 12px 0 16px;
+        }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        .page-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--gold-gradient);
+            border-radius: 2px;
+        }
+
+        /* ─── PROFILE HEADER ─── */
+        .profile-header {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: all var(--transition);
+        }
+        .profile-header:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .profile-header .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            margin: 0 auto 14px;
+            border: 4px solid var(--gold);
+            object-fit: cover;
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+        .profile-header .avatar:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(201,168,76,0.15);
+        }
+        .profile-header .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-header .name {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .profile-header .email {
+            font-size: 14px;
+            color: var(--text-2);
+            margin-top: 2px;
+        }
+        .profile-header .role-badge {
+            display: inline-block;
+            padding: 4px 18px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 6px;
+            background: rgba(201,168,76,0.08);
+            border: 1px solid rgba(201,168,76,0.12);
+            color: var(--gold);
+        }
+        .profile-header .member-since {
+            font-size: 12px;
+            color: var(--text-2);
+            margin-top: 4px;
+        }
+
+        /* ─── STATS ROW ─── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 16px 8px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all var(--transition);
+        }
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        .stat-box .number {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--gold);
+        }
+        .stat-box .label {
+            font-size: 11px;
+            color: var(--text-2);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        /* ─── SECTIONS ─── */
+        .section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 20px 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            transition: all var(--transition);
+        }
+        .section:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .section .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .section .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section .section-header .section-link {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-2);
+            cursor: pointer;
+            padding: 4px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            transition: all var(--transition);
+        }
+        .section .section-header .section-link:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+            background: rgba(201,168,76,0.04);
+        }
+
+        /* ─── FORM ─── */
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: border-color var(--transition);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-input-wrapper .file-label {
+            display: block;
+            padding: 10px 14px;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            text-align: center;
+            color: var(--text-2);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition);
+            background: var(--bg);
+        }
+        .file-input-wrapper .file-label:hover {
+            border-color: var(--gold);
+            color: var(--text);
+        }
+        .file-preview {
+            margin-top: 8px;
+            max-height: 120px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        .file-preview.show { display: block; }
+        .file-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ─── BUTTONS ─── */
+        .btn-primary {
+            padding: 12px 24px;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(201,168,76,0.15);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(201,168,76,0.25);
+        }
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-danger {
+            padding: 12px 24px;
+            background: #dc2626;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(220,38,38,0.2);
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .btn-group .btn-primary {
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        /* ─── ORDER ITEMS ─── */
+        .order-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .order-item:hover {
+            background: rgba(201,168,76,0.02);
+            margin: 0 -8px;
+            padding: 12px 8px;
+            border-radius: 8px;
+        }
+        .order-item:last-child { border-bottom: none; }
+        .order-item .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .order-item .order-id {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text);
+        }
+        .order-item .order-status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 50px;
+            text-transform: capitalize;
+        }
+        .order-status.pending   { background: #fef3c7; color: #92400e; }
+        .order-status.confirmed { background: #dbeafe; color: #1e40af; }
+        .order-status.shipped   { background: #e0f2fe; color: #0369a1; }
+        .order-status.delivered { background: #d1fae5; color: #065f46; }
+        .order-status.cancelled { background: #fee2e2; color: #991b1b; }
+        .dark .order-status.pending   { background: #92400e; color: #fef3c7; }
+        .dark .order-status.confirmed { background: #1e40af; color: #dbeafe; }
+        .dark .order-status.shipped   { background: #0369a1; color: #e0f2fe; }
+        .dark .order-status.delivered { background: #065f46; color: #d1fae5; }
+        .dark .order-status.cancelled { background: #991b1b; color: #fee2e2; }
+        .order-item .order-details {
+            font-size: 13px;
+            color: var(--text-2);
+            margin-top: 4px;
+        }
+        .order-item .order-total {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--gold);
+        }
+
+        /* ─── FAVORITES ─── */
+        .favorite-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            transition: all var(--transition);
+        }
+        .favorite-item:last-child { border-bottom: none; }
+        .favorite-item:hover {
+            background: rgba(201,168,76,0.02);
+            margin: 0 -8px;
+            padding: 10px 8px;
+            border-radius: 8px;
+        }
+        .favorite-item .shop-name {
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+        }
+        .favorite-item .shop-name:hover { color: var(--gold); }
+        .favorite-item .shop-category {
+            font-size: 12px;
+            color: var(--text-2);
+        }
+        .favorite-item .remove-fav {
+            color: #dc2626;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: all var(--transition);
+            line-height: 1;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .favorite-item .remove-fav:hover {
+            background: rgba(220,38,38,0.08);
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        /* ─── EMPTY STATE ─── */
+        .empty-state {
+            text-align: center;
+            padding: 24px 16px;
+            color: var(--text-2);
+        }
+        .empty-state .emoji {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .empty-state h3 {
+            font-size: 15px;
+            color: var(--text);
+            font-family: 'Playfair Display', serif;
+        }
+        .empty-state p {
+            font-size: 13px;
+        }
+
+        /* ─── TOAST ─── */
+        #toastContainer {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            width: 90%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            font-size: 13px;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: auto;
+            animation: slideUp 0.3s ease;
+        }
+        .toast.error { border-color: #dc2626; }
+        .toast.warning { border-color: #f59e0b; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── BOTTOM NAV ─── */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 58px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 4px 0 8px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .bn-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-2);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            min-width: 44px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all var(--transition);
+            position: relative;
+        }
+        .bn-item .bn-icon { font-size: 20px; }
+        .bn-item.active { color: var(--gold); }
+        .bn-item:hover { color: var(--text); }
+        .bn-item .badge {
+            position: absolute;
+            top: 0;
+            right: 2px;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            font-size: 8px;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+        .bn-item .badge.show { display: flex; }
+        @media (min-width: 768px) { .bottom-nav { display: none !important; } }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .profile-header { padding: 24px 16px; }
+            .profile-header .avatar { width: 80px; height: 80px; font-size: 32px; }
+            .profile-header .name { font-size: 22px; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .stat-box .number { font-size: 20px; }
+            .section .section-header h2 { font-size: 16px; }
+            .page-header h1 { font-size: 22px; }
+        }
+        @media (max-width: 480px) {
+            .profile-header .avatar { width: 64px; height: 64px; font-size: 26px; }
+            .profile-header .name { font-size: 18px; }
+            .stat-box .number { font-size: 17px; }
+            .stat-box .label { font-size: 9px; }
+            .section { padding: 14px; }
+            .btn-group .btn-primary { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+
+    <!-- ─── TOP NAV ─── -->
+    <nav class="top-nav">
+        <div class="logo">SIMHA</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop-listing.html">Shops</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="orders.html">Orders</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="profile.html" class="active">Profile</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌓</button>
+            <button onclick="window.location.href='notifications.html'" aria-label="Notifications">
+                🔔
+                <span class="badge" id="notifBadge">0</span>
+            </button>
+            <a href="profile.html" class="profile-btn" id="profileAvatarNav">👤</a>
+            <a href="admin.html" class="admin-btn">Admin</a>
+        </div>
+    </nav>
+
+    <!-- ─── PAGE HEADER ─── -->
+    <div class="page-header">
+        <h1>👤 My Profile</h1>
+    </div>
+
+    <!-- ─── PROFILE HEADER ─── -->
+    <div class="profile-header" id="profileHeader">
+        <div class="avatar" id="profileAvatar">👤</div>
+        <div class="name" id="profileName">User</div>
+        <div class="email" id="profileEmail">user@email.com</div>
+        <div class="role-badge" id="profileRole">Customer</div>
+        <div class="member-since" id="memberSince">Member since: Loading...</div>
+    </div>
+
+    <!-- ─── STATS ─── -->
+    <div class="stats-row">
+        <div class="stat-box">
+            <div class="number" id="statOrders">0</div>
+            <div class="label">Orders</div>
+        </div>
+        <div class="stat-box">
+            <div class="number" id="statFavorites">0</div>
+            <div class="label">Favorites</div>
+        </div>
+        <div class="stat-box">
+            <div class="number" id="statSpent">Rs. 0</div>
+            <div class="label">Total Spent</div>
+        </div>
+    </div>
+
+    <!-- ─── EDIT PROFILE ─── -->
+    <div class="section">
+        <div class="section-header">
+            <h2>✏️ Edit Profile</h2>
+        </div>
+        <form id="profileForm">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="editName" placeholder="Your full name">
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" id="editPhone" placeholder="9841234567">
+            </div>
+            <div class="form-group">
+                <label>Profile Photo</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="editPhoto" accept="image/*" onchange="previewImage(this, 'photoPreview')">
+                    <div class="file-label">📸 Change profile photo</div>
+                </div>
+                <div class="file-preview" id="photoPreview"><img src="" alt="Preview"></div>
+            </div>
+            <button type="submit" class="btn-primary" id="saveProfileBtn">💾 Save Changes</button>
+        </form>
+    </div>
+
+    <!-- ─── DASHBOARD SECTION ─── -->
+    <div class="section" id="dashboardSection" style="display:none;">
+        <div class="section-header">
+            <h2>🛠️ Dashboard</h2>
+        </div>
+        <div class="btn-group">
+            <button class="btn-primary" id="adminBtn" onclick="window.location.href='admin.html'" style="display:none;background:var(--ink);color:#fff;">
+                🛡️ Admin Panel
+            </button>
+            <button class="btn-primary" id="shopBtn" onclick="window.location.href='shop-dashboard.html'" style="display:none;">
+                🏪 Shop Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- ─── RECENT ORDERS ─── -->
+    <div class="section">
+        <div class="section-header">
+            <h2>📋 Recent Orders</h2>
+            <span class="section-link" onclick="window.location.href='orders.html'">View All →</span>
+        </div>
+        <div id="recentOrders">
+            <div class="empty-state">
+                <span class="emoji">📭</span>
+                <h3>Loading orders...</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── FAVORITES ─── -->
+    <div class="section">
+        <div class="section-header">
+            <h2>❤️ Favorites</h2>
+            <span class="section-link" onclick="window.location.href='shop-listing.html'">Browse Shops →</span>
+        </div>
+        <div id="favoritesList">
+            <div class="empty-state">
+                <span class="emoji">❤️</span>
+                <h3>Loading favorites...</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── LOGOUT ─── -->
+    <button class="btn-danger" onclick="handleLogout()">🚪 Logout</button>
+
+    <!-- ─── BOTTOM NAV ─── -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="bn-item" onclick="window.location.href='index.html'">
+            <span class="bn-icon">🏠</span>Home
+        </button>
+        <button class="bn-item" onclick="window.location.href='shop-listing.html'">
+            <span class="bn-icon">🏪</span>Shops
+        </button>
+        <button class="bn-item" onclick="window.location.href='cart.html'">
+            <span class="bn-icon">🛒</span>Cart
+            <span class="badge" id="cartBadge">0</span>
+        </button>
+        <button class="bn-item" onclick="window.location.href='orders.html'">
+            <span class="bn-icon">📋</span>Orders
+        </button>
+        <button class="bn-item active" onclick="window.location.href='profile.html'">
+            <span class="bn-icon">👤</span>Profile
+        </button>
+    </nav>
+
+</div>
+
+<!-- ─── TOAST ─── -->
+<div id="toastContainer"></div>
+
+<script type="importmap">
+{
+    "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+    }
+}
+</script>
+
+<script type="module">
+import { initializeApp } from 'firebase/app';
+import { getAuth, onAuthStateChanged, signOut, updateProfile } from 'firebase/auth';
+import { getFirestore, collection, doc, getDoc, getDocs, updateDoc, query, where, serverTimestamp } from 'firebase/firestore';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDJLnUB8XnXWPEtSRAMuQr9ASmD16HLIJc",
+    authDomain: "bishalshrestha17-de676.firebaseapp.com",
+    projectId: "bishalshrestha17-de676",
+    storageBucket: "bishalshrestha17-de676.firebasestorage.app",
+    messagingSenderId: "631628771230",
+    appId: "1:631628771230:web:389c6430535f6a46b6708f"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ─── STATE ───
+let currentUser = null;
+let userData = null;
+let userRole = 'customer';
+let favorites = [];
+let orders = [];
+let isDark = false;
+
+// ─── DOM REFS ───
+const profileAvatar = document.getElementById('profileAvatar');
+const profileAvatarNav = document.getElementById('profileAvatarNav');
+const profileName = document.getElementById('profileName');
+const profileEmail = document.getElementById('profileEmail');
+const profileRole = document.getElementById('profileRole');
+const memberSince = document.getElementById('memberSince');
+const statOrders = document.getElementById('statOrders');
+const statFavorites = document.getElementById('statFavorites');
+const statSpent = document.getElementById('statSpent');
+const editName = document.getElementById('editName');
+const editPhone = document.getElementById('editPhone');
+const recentOrders = document.getElementById('recentOrders');
+const favoritesList = document.getElementById('favoritesList');
+const dashboardSection = document.getElementById('dashboardSection');
+const adminBtn = document.getElementById('adminBtn');
+const shopBtn = document.getElementById('shopBtn');
+const notifBadge = document.getElementById('notifBadge');
+const cartBadge = document.getElementById('cartBadge');
+const themeToggle = document.getElementById('themeToggle');
+
+// ─── THEME ───
+function toggleTheme() {
+    isDark = !isDark;
+    document.documentElement.classList.toggle('dark', isDark);
+    themeToggle.textContent = isDark ? '☀️' : '🌓';
+    localStorage.setItem('simhaTheme', isDark ? 'dark' : 'light');
+}
+themeToggle.addEventListener('click', toggleTheme);
+
+if (localStorage.getItem('simhaTheme') === 'dark') {
+    isDark = true;
+    document.documentElement.classList.add('dark');
+    themeToggle.textContent = '☀️';
+}
+
+// ─── TOAST ───
+function showToast(msg, type = 'success') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    const icons = { success: '✅', error: '❌', warning: '⚠️' };
+    t.innerHTML = `<span>${icons[type]||'ℹ️'}</span> ${msg}`;
+    c.appendChild(t);
+    setTimeout(() => {
+        t.style.transition = 'opacity 0.3s,transform 0.3s';
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(10px)';
+        setTimeout(() => t.remove(), 300);
+    }, 2500);
+}
+window.showToast = showToast;
+
+// ─── UPLOAD TO IMGBB ───
+async function uploadToImageBB(file) {
+    return new Promise((resolve, reject) => {
+        const valid = ['image/jpeg','image/png','image/webp','image/gif'];
+        if (!valid.includes(file.type)) reject(new Error('Invalid file type.'));
+        if (file.size > 5*1024*1024) reject(new Error('Max 5MB.'));
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            const base64 = e.target.result.split(',')[1];
+            const formData = new FormData();
+            formData.append('key', 'f69fb2e400656818bbdb2b33cb144c3f');
+            formData.append('image', base64);
+            try {
+                const res = await fetch('https://api.imgbb.com/1/upload', { method:'POST', body:formData });
+                const data = await res.json();
+                if (data.success) resolve(data.data.url);
+                else reject(new Error(data.error?.message || 'Upload failed'));
+            } catch (err) { reject(err); }
+        };
+        reader.onerror = () => reject(new Error('File read error'));
+        reader.readAsDataURL(file);
+    });
+}
+
+window.previewImage = function(input, previewId) {
+    const preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.querySelector('img').src = e.target.result;
+            preview.classList.add('show');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+};
+
+// ─── LOAD ORDERS ───
+async function loadOrders(uid) {
+    try {
+        const q = query(collection(db, 'orders'), where('customerId', '==', uid));
+        const snapshot = await getDocs(q);
+        orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        orders.sort((a, b) => {
+            const da = a.createdAt?.toDate?.() || new Date(0);
+            const db_ = b.createdAt?.toDate?.() || new Date(0);
+            return db_ - da;
+        });
+
+        statOrders.textContent = orders.length;
+        const totalSpent = orders
+            .filter(o => o.status === 'delivered')
+            .reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+        statSpent.textContent = `Rs. ${totalSpent.toLocaleString()}`;
+
+        if (orders.length === 0) {
+            recentOrders.innerHTML = `
+                <div class="empty-state">
+                    <span class="emoji">📭</span>
+                    <h3>No orders yet</h3>
+                    <p>Start shopping to see your orders here.</p>
+                </div>
+            `;
+            return;
+        }
+
+        recentOrders.innerHTML = orders.slice(0, 5).map(order => {
+            const orderId = order.orderId || order.id?.slice(0, 8) || 'Order';
+            const dateStr = order.createdAt?.toDate?.() 
+                ? new Date(order.createdAt.toDate()).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' })
+                : '';
+            return `
+                <div class="order-item" onclick="window.location.href='orders.html'">
+                    <div class="order-header">
+                        <span class="order-id">#${orderId}</span>
+                        <span class="order-status ${order.status || 'pending'}">${(order.status || 'Pending')}</span>
+                    </div>
+                    <div class="order-details">
+                        ${order.shopName || 'Shop'} • ${order.items?.length || 0} items
+                        ${dateStr ? ' • ' + dateStr : ''}
+                    </div>
+                    <div class="order-total">Rs. ${(order.totalAmount || 0).toLocaleString()}</div>
+                </div>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Error loading orders:', error);
+        recentOrders.innerHTML = `
+            <div class="empty-state">
+                <span class="emoji">⚠️</span>
+                <h3>Could not load orders</h3>
+                <p>${error.message || 'Please try again.'}</p>
+            </div>
+        `;
+    }
+}
+
+// ─── LOAD FAVORITES ───
+async function loadFavorites() {
+    try {
+        if (!favorites || favorites.length === 0) {
+            favoritesList.innerHTML = `
+                <div class="empty-state">
+                    <span class="emoji">❤️</span>
+                    <h3>No favorites yet</h3>
+                    <p>Save your favorite shops here.</p>
+                </div>
+            `;
+            statFavorites.textContent = '0';
+            return;
+        }
+
+        let html = '';
+        let loadedCount = 0;
+        for (const shopId of favorites) {
+            try {
+                const shopDoc = await getDoc(doc(db, 'shops', shopId));
+                if (shopDoc.exists()) {
+                    const shop = shopDoc.data();
+                    html += `
+                        <div class="favorite-item">
+                            <div onclick="window.location.href='shop-detail.html?shopId=${shopId}'" style="flex:1;cursor:pointer;">
+                                <div class="shop-name">${shop.shopName || 'Shop'}</div>
+                                <div class="shop-category">${shop.category || ''} ${shop.district ? '• '+shop.district : ''}</div>
+                            </div>
+                            <button class="remove-fav" onclick="removeFavorite('${shopId}')">✕</button>
+                        </div>
+                    `;
+                    loadedCount++;
+                }
+            } catch (e) {
+                console.warn('Could not load favorite:', shopId, e);
+            }
+        }
+        favoritesList.innerHTML = html || `
+            <div class="empty-state">
+                <span class="emoji">❤️</span>
+                <h3>No favorites found</h3>
+                <p>Some favorites may have been removed.</p>
+            </div>
+        `;
+        statFavorites.textContent = loadedCount;
+    } catch (error) {
+        console.error('Error loading favorites:', error);
+        favoritesList.innerHTML = `
+            <div class="empty-state">
+                <span class="emoji">⚠️</span>
+                <h3>Failed to load favorites</h3>
+                <p>${error.message || 'Please try again.'}</p>
+            </div>
+        `;
+    }
+}
+
+window.removeFavorite = async function(shopId) {
+    if (!currentUser) return;
+    try {
+        const userRef = doc(db, 'users', currentUser.uid);
+        const updatedFavorites = favorites.filter(id => id !== shopId);
+        await updateDoc(userRef, { favorites: updatedFavorites });
+        favorites = updatedFavorites;
+        statFavorites.textContent = favorites.length;
+        await loadFavorites();
+        showToast('Removed from favorites', 'warning');
+    } catch (error) {
+        console.error('Error removing favorite:', error);
+        showToast('Failed to remove favorite', 'error');
+    }
+};
+
+// ─── UPDATE BADGES ───
+async function updateBadges() {
+    if (!currentUser) return;
+    try {
+        const cartDoc = await getDoc(doc(db, 'cart', currentUser.uid));
+        const cartCount = cartDoc.exists() ? (cartDoc.data().items || []).reduce((s, i) => s + (i.qty || 0), 0) : 0;
+        cartBadge.textContent = cartCount > 99 ? '99+' : cartCount;
+        cartBadge.classList.toggle('show', cartCount > 0);
+
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        if (userDoc.exists()) {
+            const read = userDoc.data().readNotifications || [];
+            const notifSnap = await getDocs(query(collection(db, 'notifications'), where('isActive', '==', true)));
+            const unread = notifSnap.size - read.length;
+            notifBadge.textContent = unread > 99 ? '99+' : unread;
+            notifBadge.classList.toggle('show', unread > 0);
+        }
+    } catch (e) {
+        console.warn('Badge update error:', e);
+    }
+}
+
+// ─── LOAD PROFILE ───
+async function loadProfile(user) {
+    if (!user) return;
+
+    try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (!userDoc.exists()) {
+            showToast('User data not found', 'error');
+            return;
+        }
+
+        userData = userDoc.data();
+        userRole = userData.role || 'customer';
+
+        const name = userData.name || user.displayName || 'User';
+        const email = userData.email || user.email || 'No email';
+        const initial = name.charAt(0).toUpperCase();
+
+        // Update avatar
+        if (userData.profilePhotoURL) {
+            profileAvatar.innerHTML = `<img src="${userData.profilePhotoURL}" alt="${name}">`;
+            profileAvatar.style.background = 'transparent';
+            profileAvatar.style.color = 'transparent';
+        } else {
+            profileAvatar.textContent = initial;
+            profileAvatar.style.background = 'var(--gold-gradient)';
+            profileAvatar.style.color = '#0a0a0a';
+        }
+
+        if (profileAvatarNav) {
+            if (userData.profilePhotoURL) {
+                profileAvatarNav.innerHTML = `<img src="${userData.profilePhotoURL}" alt="${name}">`;
+            } else {
+                profileAvatarNav.textContent = initial;
+            }
+        }
+
+        profileName.textContent = name;
+        profileEmail.textContent = email;
+        profileRole.textContent = userRole === 'admin' ? '🛡️ Admin' : 
+                                 userRole === 'shop' ? '🏪 Shop Owner' : '👤 Customer';
+
+        if (userData.createdAt) {
+            const date = userData.createdAt.toDate ? 
+                userData.createdAt.toDate() : new Date(userData.createdAt);
+            memberSince.textContent = `Member since: ${date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+        }
+
+        editName.value = name;
+        editPhone.value = userData.phone || '';
+
+        if (userRole === 'admin') {
+            dashboardSection.style.display = 'block';
+            adminBtn.style.display = 'inline-block';
+            shopBtn.style.display = 'none';
+        } else if (userRole === 'shop') {
+            dashboardSection.style.display = 'block';
+            adminBtn.style.display = 'none';
+            shopBtn.style.display = 'inline-block';
+        } else {
+            dashboardSection.style.display = 'none';
+        }
+
+        favorites = userData.favorites || [];
+        await loadFavorites();
+        await loadOrders(user.uid);
+        await updateBadges();
+
+    } catch (error) {
+        console.error('Error loading profile:', error);
+        showToast('Failed to load profile', 'error');
+    }
+}
+
+// ─── SAVE PROFILE ───
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('saveProfileBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+        const name = editName.value.trim();
+        const phone = editPhone.value.trim();
+
+        if (!name) {
+            showToast('Name is required', 'error');
+            btn.disabled = false;
+            btn.textContent = '💾 Save Changes';
+            return;
+        }
+
+        const updateData = {
+            name: name,
+            phone: phone,
+            updatedAt: serverTimestamp()
+        };
+
+        const photoFile = document.getElementById('editPhoto').files[0];
+        if (photoFile) {
+            const photoURL = await uploadToImageBB(photoFile);
+            updateData.profilePhotoURL = photoURL;
+        }
+
+        await updateDoc(doc(db, 'users', currentUser.uid), updateData);
+
+        if (photoFile) {
+            await updateProfile(currentUser, {
+                displayName: name,
+                photoURL: updateData.profilePhotoURL || currentUser.photoURL
+            });
+        } else {
+            await updateProfile(currentUser, { displayName: name });
+        }
+
+        showToast('Profile updated successfully! ✅', 'success');
+        document.getElementById('photoPreview').classList.remove('show');
+        await loadProfile(currentUser);
+
+    } catch (error) {
+        console.error('Error saving profile:', error);
+        showToast('Failed to save profile: ' + error.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '💾 Save Changes';
+    }
+});
+
+// ─── LOGOUT ───
+window.handleLogout = async function() {
+    if (!confirm('Are you sure you want to logout?')) return;
+    try {
+        await signOut(auth);
+        showToast('Logged out successfully 👋', 'info');
+        window.location.href = 'auth.html';
+    } catch (error) {
+        console.error('Error logging out:', error);
+        showToast('Failed to logout', 'error');
+    }
+};
+
+// ─── AUTH ───
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        currentUser = user;
+        await loadProfile(user);
+    } else {
+        window.location.href = 'auth.html';
+    }
+});
+
+console.log('🚀 Profile Page — Premium Design with Desktop Nav & Dark Mode');
+</script>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff">
+    <title>Sign In · Simha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ─── ROOT ─── */
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --gold-gradient: linear-gradient(135deg, #c9a84c 0%, #f5e6b8 40%, #c9a84c 70%, #a8892e 100%);
+            --bg: #f4f7fb;
+            --surface: #ffffff;
+            --border: #e8ecf0;
+            --text: #0d0d0d;
+            --text-2: #6b727a;
+            --text-3: #a0a7ae;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .dark {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --border: #2a2a2a;
+            --text: #f5f0eb;
+            --text-2: #a8a09a;
+            --text-3: #6b6a6a;
+            --shadow: 0 2px 12px rgba(0,0,0,0.3);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        /* ─── AUTH CONTAINER ─── */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 44px 36px 40px;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition);
+        }
+        .auth-card:hover {
+            box-shadow: 0 12px 50px rgba(0,0,0,0.1);
+        }
+        .dark .auth-card:hover {
+            box-shadow: 0 12px 50px rgba(0,0,0,0.4);
+        }
+
+        /* ─── BRAND ─── */
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .brand .icon {
+            font-size: 56px;
+            display: block;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+        .brand h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .brand p {
+            font-size: 14px;
+            color: var(--text-2);
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        /* ─── STATUS BOX ─── */
+        .status-box {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .status-box.show { display: block; }
+        .status-box.info {
+            background: rgba(201,168,76,0.08);
+            color: var(--gold);
+            border: 1px solid rgba(201,168,76,0.12);
+        }
+        .status-box.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .status-box.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .dark .status-box.info {
+            background: rgba(201,168,76,0.12);
+        }
+        .dark .status-box.success {
+            background: #065f46;
+            color: #d1fae5;
+            border-color: #0a7a4a;
+        }
+        .dark .status-box.error {
+            background: #991b1b;
+            color: #fee2e2;
+            border-color: #b91c1c;
+        }
+
+        /* ─── GOOGLE BUTTON ─── */
+        .btn-google {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--surface);
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition);
+        }
+        .btn-google:hover:not(:disabled) {
+            border-color: var(--gold);
+            background: rgba(201,168,76,0.04);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        .btn-google:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-google .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            flex-shrink: 0;
+        }
+        .btn-google.loading .btn-text,
+        .btn-google.loading .btn-icon { display: none; }
+        .btn-google.loading .spinner { display: block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── DIVIDER ─── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 24px 0;
+            color: var(--text-3);
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ─── USER SECTION ─── */
+        .user-section { display: none; }
+        .user-avatar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 4px 0 20px;
+        }
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            margin-bottom: 12px;
+            display: block;
+            background: var(--border);
+            transition: all var(--transition);
+        }
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(201,168,76,0.15);
+        }
+        .user-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .user-email {
+            font-size: 14px;
+            color: var(--text-2);
+            margin-bottom: 8px;
+        }
+        .role-pill {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(201,168,76,0.08);
+            color: var(--gold);
+            border: 1px solid rgba(201,168,76,0.12);
+            text-transform: capitalize;
+        }
+
+        /* ─── BUTTONS ─── */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all var(--transition);
+            box-shadow: 0 4px 20px rgba(201,168,76,0.15);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(201,168,76,0.25);
+        }
+        .btn-outline {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all var(--transition);
+            margin-top: 10px;
+        }
+        .btn-outline:hover {
+            border-color: var(--gold);
+            background: rgba(201,168,76,0.04);
+            transform: translateY(-2px);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-3);
+            line-height: 1.6;
+        }
+        .footer-note a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        /* ─── TOAST ─── */
+        #toasts {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: min(400px, 90vw);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            pointer-events: auto;
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-md);
+        }
+        .toast .icon { font-size: 18px; }
+        .toast.error { border-color: #dc2626; }
+        .toast.warning { border-color: #f59e0b; }
+        .toast.success { border-color: #10b981; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 32px 20px 28px;
+                border: none;
+                border-radius: 0;
+                max-width: 100%;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .brand .icon { font-size: 44px; }
+            .brand h1 { font-size: 28px; }
+            .user-avatar { width: 64px; height: 64px; }
+        }
+
+        /* ─── THEME TOGGLE ─── */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(8px);
+        }
+        .theme-toggle:hover {
+            transform: scale(1.05) rotate(-8deg);
+            border-color: var(--gold);
+        }
+        @media (max-width: 480px) {
+            .theme-toggle { top: 12px; right: 12px; width: 38px; height: 38px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── THEME TOGGLE ─── -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌓</button>
+
+    <div class="auth-container">
+        <div class="auth-card">
+
+            <!-- ─── BRAND ─── -->
+            <div class="brand">
+                <span class="icon">🦁</span>
+                <h1>SIMHA</h1>
+                <p>All Shops, One Place</p>
+            </div>
+
+            <!-- ─── STATUS BOX ─── -->
+            <div class="status-box" id="statusBox"></div>
+
+            <!-- ─── LOGIN SECTION ─── -->
+            <div id="loginSection">
+                <button class="btn-google" id="googleBtn" onclick="handleGoogleLogin()">
+                    <svg class="btn-icon" width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                    </svg>
+                    <span class="btn-text">Continue with Google</span>
+                    <span class="spinner"></span>
+                </button>
+                <div class="divider">secure sign-in</div>
+                <p style="text-align:center;font-size:13px;color:var(--text-3);line-height:1.6;">
+                    Browse local shops, place orders, or manage your store.
+                </p>
+            </div>
+
+            <!-- ─── USER SECTION (logged in) ─── -->
+            <div class="user-section" id="userSection">
+                <div class="user-avatar-wrap">
+                    <img class="user-avatar" id="userAvatar" src="" alt="Profile">
+                    <div class="user-name" id="userName"></div>
+                    <div class="user-email" id="userEmail"></div>
+                    <span class="role-pill" id="userRole">customer</span>
+                </div>
+                <button class="btn-primary" onclick="goToDashboard()">Continue →</button>
+                <button class="btn-outline" onclick="handleLogout()">Sign out</button>
+            </div>
+
+            <!-- ─── FOOTER ─── -->
+            <p class="footer-note">
+                By continuing you agree to our <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a>.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- ─── TOASTS ─── -->
+    <div id="toasts"></div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+        }
+    }
+    </script>
+
+    <script type="module">
+    import { initializeApp } from 'firebase/app';
+    import { 
+        getAuth, signInWithPopup, GoogleAuthProvider,
+        onAuthStateChanged, signOut, setPersistence,
+        browserLocalPersistence 
+    } from 'firebase/auth';
+    import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+
+    // ─── CONFIG ───
+    const firebaseConfig = {
+        apiKey: "AIzaSyDJLnUB8XnXWPEtSRAMuQr9ASmD16HLIJc",
+        authDomain: "bishalshrestha17-de676.firebaseapp.com",
+        projectId: "bishalshrestha17-de676",
+        storageBucket: "bishalshrestha17-de676.firebasestorage.app",
+        messagingSenderId: "631628771230",
+        appId: "1:631628771230:web:389c6430535f6a46b6708f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    setPersistence(auth, browserLocalPersistence).catch(() => {});
+
+    // ─── STATE ───
+    let isDark = false;
+
+    // ─── DOM REFS ───
+    const themeToggle = document.getElementById('themeToggle');
+    const statusBox = document.getElementById('statusBox');
+    const loginSection = document.getElementById('loginSection');
+    const userSection = document.getElementById('userSection');
+    const userAvatar = document.getElementById('userAvatar');
+    const userName = document.getElementById('userName');
+    const userEmail = document.getElementById('userEmail');
+    const userRole = document.getElementById('userRole');
+    const googleBtn = document.getElementById('googleBtn');
+
+    // ─── THEME ───
+    function toggleTheme() {
+        isDark = !isDark;
+        document.documentElement.classList.toggle('dark', isDark);
+        themeToggle.textContent = isDark ? '☀️' : '🌓';
+        localStorage.setItem('simhaTheme', isDark ? 'dark' : 'light');
+    }
+    themeToggle.addEventListener('click', toggleTheme);
+
+    if (localStorage.getItem('simhaTheme') === 'dark') {
+        isDark = true;
+        document.documentElement.classList.add('dark');
+        themeToggle.textContent = '☀️';
+    }
+
+    // ─── TOAST ───
+    function toast(msg, type = 'success') {
+        const c = document.getElementById('toasts');
+        const t = document.createElement('div');
+        t.className = `toast ${type}`;
+        const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+        t.innerHTML = `<span class="icon">${icons[type] || 'ℹ️'}</span> ${msg}`;
+        c.appendChild(t);
+        setTimeout(() => {
+            t.style.transition = 'opacity 0.3s,transform 0.3s';
+            t.style.opacity = '0';
+            t.style.transform = 'translateY(10px)';
+            setTimeout(() => t.remove(), 300);
+        }, 3500);
+    }
+    window.toast = toast;
+
+    // ─── STATUS ───
+    function setStatus(msg, type = 'info') {
+        statusBox.textContent = msg;
+        statusBox.className = `status-box show ${type}`;
+    }
+    function clearStatus() {
+        statusBox.className = 'status-box';
+    }
+
+    // ─── SAVE USER ───
+    async function saveUserToFirestore(user) {
+        const ref = doc(db, 'users', user.uid);
+        let snap;
+        try {
+            snap = await getDoc(ref);
+        } catch (e) {
+            throw new Error('read-failed:' + e.code);
+        }
+
+        if (snap.exists()) {
+            await setDoc(ref, {
+                name: user.displayName || snap.data().name || 'User',
+                email: user.email || snap.data().email || '',
+                profilePhotoURL: user.photoURL || snap.data().profilePhotoURL || '',
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+            return { isNew: false, role: snap.data().role || 'customer' };
+        }
+
+        const newUser = {
+            uid: user.uid,
+            name: user.displayName || 'User',
+            email: user.email || '',
+            phone: user.phoneNumber || '',
+            role: 'customer',
+            profilePhotoURL: user.photoURL || '',
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            emailVerified: user.emailVerified || false,
+            favorites: [],
+            readNotifications: []
+        };
+        await setDoc(ref, newUser);
+        return { isNew: true, role: 'customer' };
+    }
+
+    // ─── REDIRECT ───
+    async function redirectByRole(uid) {
+        try {
+            const snap = await getDoc(doc(db, 'users', uid));
+            const role = snap.exists() ? (snap.data().role || 'customer') : 'customer';
+            if (role === 'admin') window.location.replace('admin.html');
+            else if (role === 'shop') window.location.replace('shop-dashboard.html');
+            else window.location.replace('index.html');
+        } catch {
+            window.location.replace('index.html');
+        }
+    }
+
+    // ─── SHOW USER ───
+    async function showUser(user) {
+        loginSection.style.display = 'none';
+        userSection.style.display = 'block';
+        userAvatar.src = user.photoURL || '';
+        userName.textContent = user.displayName || 'User';
+        userEmail.textContent = user.email || '';
+        try {
+            const snap = await getDoc(doc(db, 'users', user.uid));
+            if (snap.exists()) {
+                userRole.textContent = snap.data().role || 'customer';
+            }
+        } catch {}
+    }
+
+    // ─── GOOGLE LOGIN ───
+    window.handleGoogleLogin = async function() {
+        googleBtn.classList.add('loading');
+        googleBtn.disabled = true;
+        clearStatus();
+
+        try {
+            setStatus('Opening Google sign-in…', 'info');
+            const provider = new GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            setStatus('Saving your account…', 'info');
+            let saveResult;
+            try {
+                saveResult = await saveUserToFirestore(user);
+            } catch (saveErr) {
+                if (saveErr.message.includes('permission-denied') || saveErr.message.includes('read-failed:permission-denied')) {
+                    setStatus(
+                        '⚠️ Firestore permission denied. Please set up Firestore rules.',
+                        'error'
+                    );
+                } else {
+                    setStatus('⚠️ Could not save account: ' + saveErr.message, 'error');
+                }
+                showUser(user);
+                return;
+            }
+
+            if (saveResult.isNew) {
+                toast('Account created! Welcome 🎉', 'success');
+            } else {
+                toast('Welcome back! 👋', 'success');
+            }
+            clearStatus();
+            setTimeout(() => redirectByRole(user.uid), 900);
+
+        } catch (err) {
+            clearStatus();
+            let msg = 'Sign in failed. Please try again.';
+            if (err.code === 'auth/popup-closed-by-user') msg = 'Sign in cancelled.';
+            else if (err.code === 'auth/popup-blocked') msg = 'Popup blocked — please allow popups.';
+            else if (err.code === 'auth/network-request-failed') msg = 'Network error. Check your connection.';
+            toast(msg, 'error');
+        } finally {
+            googleBtn.classList.remove('loading');
+            googleBtn.disabled = false;
+        }
+    };
+
+    // ─── DASHBOARD ───
+    window.goToDashboard = function() {
+        const user = auth.currentUser;
+        if (user) redirectByRole(user.uid);
+    };
+
+    // ─── LOGOUT ───
+    window.handleLogout = async function() {
+        try {
+            await signOut(auth);
+            loginSection.style.display = 'block';
+            userSection.style.display = 'none';
+            clearStatus();
+            toast('Signed out', 'info');
+        } catch {
+            toast('Sign out failed', 'error');
+        }
+    };
+
+    // ─── AUTH STATE ───
+    let authResolved = false;
+    onAuthStateChanged(auth, async (user) => {
+        if (authResolved) return;
+        authResolved = true;
+
+        if (user) {
+            try {
+                await saveUserToFirestore(user);
+            } catch {}
+            redirectByRole(user.uid);
+        } else {
+            loginSection.style.display = 'block';
+            userSection.style.display = 'none';
+        }
+    });
+
+    console.log('🔐 Auth Page — Premium Design with Dark Mode');
+    </script>
+</body>
+</html>

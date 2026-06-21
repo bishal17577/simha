@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff">
+    <title>Notifications · Simha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ─── ROOT ─── */
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --gold-gradient: linear-gradient(135deg, #c9a84c 0%, #f5e6b8 40%, #c9a84c 70%, #a8892e 100%);
+            --bg: #f4f7fb;
+            --surface: #ffffff;
+            --card: #ffffff;
+            --border: #e8ecf0;
+            --text: #0d0d0d;
+            --text-2: #6b727a;
+            --text-3: #a0a7ae;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .dark {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --card: #1a1a1a;
+            --border: #2a2a2a;
+            --text: #f5f0eb;
+            --text-2: #a8a09a;
+            --text-3: #6b6a6a;
+            --shadow: 0 2px 12px rgba(0,0,0,0.3);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background var(--transition), color var(--transition);
+        }
+        .app { max-width: 1200px; margin: 0 auto; padding: 0 16px 80px; }
+
+        /* ─── TOP NAV ─── */
+        .top-nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow);
+            border-radius: 0 0 var(--radius) var(--radius);
+            margin-bottom: 8px;
+        }
+        .top-nav .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Playfair Display', serif;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .top-nav .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+            align-items: center;
+        }
+        .top-nav .nav-links a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-2);
+            transition: all var(--transition);
+            padding: 6px 12px;
+            border-radius: 50px;
+            text-decoration: none;
+        }
+        .top-nav .nav-links a:hover {
+            color: var(--text);
+            background: rgba(201,168,76,0.06);
+        }
+        .top-nav .nav-links a.active {
+            color: var(--gold);
+            background: rgba(201,168,76,0.08);
+        }
+        .top-nav .nav-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .top-nav .nav-actions button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-2);
+            transition: all var(--transition);
+            position: relative;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .top-nav .nav-actions button:hover {
+            background: rgba(201,168,76,0.06);
+            color: var(--text);
+        }
+        .top-nav .nav-actions button .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            font-size: 8px;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--surface);
+        }
+        .top-nav .nav-actions button .badge.show { display: flex; }
+        .top-nav .nav-actions .theme-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--text-2);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+        }
+        .top-nav .nav-actions .theme-toggle:hover {
+            background: rgba(201,168,76,0.06);
+            color: var(--text);
+        }
+        .top-nav .nav-actions .profile-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 2px solid transparent;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        .top-nav .nav-actions .profile-btn:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+        }
+        .top-nav .nav-actions .profile-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .top-nav .nav-actions .admin-btn {
+            padding: 6px 16px;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 11px;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+        }
+        .top-nav .nav-actions .admin-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(201,168,76,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .top-nav .nav-links a { font-size: 11px; padding: 4px 8px; }
+            .top-nav .nav-links { gap: 4px; }
+            .top-nav .logo { font-size: 16px; }
+            .top-nav .nav-actions .admin-btn { font-size: 9px; padding: 4px 12px; }
+        }
+        @media (max-width: 480px) {
+            .top-nav { padding: 0 10px; height: 54px; flex-wrap: wrap; gap: 4px; }
+            .top-nav .nav-links { order: 3; width: 100%; justify-content: center; gap: 2px; }
+            .top-nav .nav-links a { font-size: 10px; padding: 3px 6px; }
+            .top-nav .nav-actions { gap: 2px; }
+            .top-nav .nav-actions button { width: 32px; height: 32px; font-size: 15px; }
+            .top-nav .nav-actions .profile-btn { width: 30px; height: 30px; font-size: 12px; }
+        }
+
+        /* ─── PAGE HEADER ─── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 12px 0 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        .page-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--gold-gradient);
+            border-radius: 2px;
+        }
+        .page-header .badge-count {
+            font-size: 14px;
+            color: var(--text-2);
+            background: var(--surface);
+            padding: 4px 16px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+        .page-header .badge-count strong { color: var(--gold); }
+        .page-header .role-badge {
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(201,168,76,0.08);
+            border: 1px solid rgba(201,168,76,0.12);
+            color: var(--gold);
+        }
+
+        /* ─── CARD ─── */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 20px 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            transition: all var(--transition);
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-header .live-indicator {
+            font-size: 12px;
+            color: var(--text-2);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .card-header .live-indicator .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-block;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* ─── NOTIFICATION LIST ─── */
+        .notif-list { display: flex; flex-direction: column; gap: 12px; }
+        .notif-item {
+            background: var(--bg);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            transition: all var(--transition);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .notif-item:hover {
+            border-color: rgba(201,168,76,0.2);
+            transform: translateX(4px);
+        }
+        .notif-item .notif-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(201,168,76,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            overflow: hidden;
+            border: 1px solid rgba(201,168,76,0.1);
+        }
+        .notif-item .notif-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .notif-item .notif-content { flex: 1; min-width: 0; }
+        .notif-item .notif-content .notif-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text);
+            line-height: 1.3;
+        }
+        .notif-item .notif-content .notif-body {
+            font-size: 13px;
+            color: var(--text-2);
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+        .notif-item .notif-content .notif-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 12px;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--text-3);
+        }
+        .notif-item .notif-content .notif-meta .tag {
+            background: var(--surface);
+            padding: 1px 10px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 10px;
+            color: var(--text-2);
+            border: 1px solid var(--border);
+        }
+        .notif-item .notif-content .notif-meta .tag.admin-tag {
+            background: rgba(201,168,76,0.1);
+            border-color: rgba(201,168,76,0.15);
+            color: var(--gold);
+        }
+
+        /* ─── EMPTY STATE ─── */
+        .empty-state {
+            text-align: center;
+            padding: 40px 16px;
+            color: var(--text-2);
+        }
+        .empty-state .emoji {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .empty-state h3 {
+            font-size: 18px;
+            color: var(--text);
+            font-family: 'Playfair Display', serif;
+        }
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* ─── FORM ─── */
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: border-color var(--transition);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+        }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: var(--bg);
+            border-radius: 10px;
+            border: 1px dashed var(--border);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-2);
+            transition: all var(--transition);
+        }
+        .file-upload-label:hover {
+            border-color: var(--gold);
+            color: var(--text);
+        }
+        .file-preview {
+            margin-top: 8px;
+            max-height: 120px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        .file-preview.show { display: block; }
+        .file-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            max-height: 120px;
+            border-radius: 10px;
+        }
+
+        /* ─── BUTTONS ─── */
+        .btn-primary {
+            padding: 12px 28px;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(201,168,76,0.15);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(201,168,76,0.25);
+        }
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-secondary {
+            padding: 8px 18px;
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            background: rgba(201,168,76,0.04);
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            padding: 8px 18px;
+            background: #dc2626;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(220,38,38,0.2);
+        }
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ─── TOAST ─── */
+        #toastContainer {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            width: 90%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            font-size: 13px;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: auto;
+            animation: slideUp 0.3s ease;
+        }
+        .toast.error { border-color: #dc2626; }
+        .toast.warning { border-color: #f59e0b; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── BOTTOM NAV ─── */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 58px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 4px 0 8px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .bn-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-2);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            min-width: 44px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all var(--transition);
+            position: relative;
+        }
+        .bn-item .bn-icon { font-size: 20px; }
+        .bn-item.active { color: var(--gold); }
+        .bn-item:hover { color: var(--text); }
+        .bn-item .badge {
+            position: absolute;
+            top: 0;
+            right: 2px;
+            background: var(--gold-gradient);
+            color: #0a0a0a;
+            font-size: 8px;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+        .bn-item .badge.show { display: flex; }
+        @media (min-width: 768px) { .bottom-nav { display: none !important; } }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 22px; }
+            .notif-item { padding: 12px 14px; }
+            .notif-item .notif-icon { width: 36px; height: 36px; font-size: 16px; }
+        }
+        @media (max-width: 480px) {
+            .card { padding: 14px; }
+            .notif-item .notif-content .notif-title { font-size: 14px; }
+            .notif-item .notif-content .notif-body { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+
+    <!-- ─── TOP NAV ─── -->
+    <nav class="top-nav">
+        <div class="logo">SIMHA</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop-listing.html">Shops</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="orders.html">Orders</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="notifications.html" class="active">Notifications</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌓</button>
+            <button onclick="window.location.href='notifications.html'" aria-label="Notifications">
+                🔔
+                <span class="badge" id="notifBadge">0</span>
+            </button>
+            <a href="profile.html" class="profile-btn" id="profileAvatar">👤</a>
+            <a href="admin.html" class="admin-btn">Admin</a>
+        </div>
+    </nav>
+
+    <!-- ─── PAGE HEADER ─── -->
+    <div class="page-header">
+        <h1>📨 Notifications</h1>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <span class="badge-count" id="notifCounter"><strong>0</strong> notifications</span>
+            <span class="role-badge" id="roleDisplay">👤 Customer</span>
+        </div>
+    </div>
+
+    <!-- ─── NOTIFICATIONS LIST ─── -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📬 Live Feed</h2>
+            <span class="live-indicator">
+                <span class="dot"></span> Realtime
+            </span>
+        </div>
+        <div id="notificationsList" class="notif-list">
+            <div class="empty-state">
+                <span class="emoji">📭</span>
+                <h3>No notifications</h3>
+                <p>Check back later for updates.</p>
+            </div>
+        </div>
+        <div class="card-actions">
+            <button class="btn-secondary" id="refreshBtn">↻ Refresh</button>
+            <button class="btn-danger" id="clearAllBtn" style="display:none;">🗑️ Clear All</button>
+        </div>
+    </div>
+
+    <!-- ─── SEND NOTIFICATION (Admin/Shop only) ─── -->
+    <div class="card" id="sendCard" style="display:none;">
+        <div class="card-header">
+            <h2>✉️ Send Notification</h2>
+        </div>
+        <form id="notifForm">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="notifTitle" placeholder="e.g. 🎉 Special Offer!" value="Special Offer!">
+            </div>
+            <div class="form-group">
+                <label>Message *</label>
+                <textarea id="notifBody" placeholder="Write your message..." required>Get 20% off on all items. Use code SIMHA20.</textarea>
+            </div>
+            <div class="form-group">
+                <label>Target Audience</label>
+                <select id="notifTarget">
+                    <option value="all">🌐 All Users</option>
+                    <option value="customer">👤 Customers Only</option>
+                    <option value="shop">🏪 Shop Owners Only</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>📸 Upload Image</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" id="notifImageFile" accept="image/*">
+                    <div class="file-upload-label">Click to choose image</div>
+                </div>
+                <div class="file-preview" id="imagePreview"><img src="" alt="Preview"></div>
+            </div>
+            <div class="form-group">
+                <label>Deep Link (optional)</label>
+                <input type="text" id="notifLink" placeholder="/shop-listing.html" value="/shop-listing.html">
+            </div>
+            <button type="submit" class="btn-primary" id="sendNotifBtn">📤 Send Notification</button>
+        </form>
+    </div>
+
+    <!-- ─── BOTTOM NAV ─── -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="bn-item" onclick="window.location.href='index.html'">
+            <span class="bn-icon">🏠</span>Home
+        </button>
+        <button class="bn-item" onclick="window.location.href='shop-listing.html'">
+            <span class="bn-icon">🏪</span>Shops
+        </button>
+        <button class="bn-item" onclick="window.location.href='cart.html'">
+            <span class="bn-icon">🛒</span>Cart
+            <span class="badge" id="cartBadge">0</span>
+        </button>
+        <button class="bn-item" onclick="window.location.href='orders.html'">
+            <span class="bn-icon">📋</span>Orders
+        </button>
+        <button class="bn-item active" onclick="window.location.href='profile.html'">
+            <span class="bn-icon">👤</span>Profile
+        </button>
+    </nav>
+
+</div>
+
+<!-- ─── TOAST ─── -->
+<div id="toastContainer"></div>
+
+<script type="importmap">
+{
+    "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+    }
+}
+</script>
+
+<script type="module">
+import { initializeApp } from 'firebase/app';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {
+    getFirestore, collection, doc, getDocs, getDoc, setDoc, deleteDoc,
+    query, orderBy, onSnapshot, serverTimestamp
+} from 'firebase/firestore';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDJLnUB8XnXWPEtSRAMuQr9ASmD16HLIJc",
+    authDomain: "bishalshrestha17-de676.firebaseapp.com",
+    projectId: "bishalshrestha17-de676",
+    storageBucket: "bishalshrestha17-de676.firebasestorage.app",
+    messagingSenderId: "631628771230",
+    appId: "1:631628771230:web:389c6430535f6a46b6708f"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ─── STATE ───
+let currentUserRole = 'customer';
+let unsubscribe = null;
+let allNotifs = [];
+let isDark = false;
+
+// ─── DOM REFS ───
+const listEl = document.getElementById('notificationsList');
+const counterEl = document.getElementById('notifCounter');
+const toastContainer = document.getElementById('toastContainer');
+const notifForm = document.getElementById('notifForm');
+const sendBtn = document.getElementById('sendNotifBtn');
+const refreshBtn = document.getElementById('refreshBtn');
+const clearAllBtn = document.getElementById('clearAllBtn');
+const sendCard = document.getElementById('sendCard');
+const roleDisplay = document.getElementById('roleDisplay');
+const imageFileInput = document.getElementById('notifImageFile');
+const imagePreview = document.getElementById('imagePreview');
+const notifBadge = document.getElementById('notifBadge');
+const cartBadge = document.getElementById('cartBadge');
+const profileAvatar = document.getElementById('profileAvatar');
+const themeToggle = document.getElementById('themeToggle');
+
+// ─── THEME ───
+function toggleTheme() {
+    isDark = !isDark;
+    document.documentElement.classList.toggle('dark', isDark);
+    themeToggle.textContent = isDark ? '☀️' : '🌓';
+    localStorage.setItem('simhaTheme', isDark ? 'dark' : 'light');
+}
+themeToggle.addEventListener('click', toggleTheme);
+
+if (localStorage.getItem('simhaTheme') === 'dark') {
+    isDark = true;
+    document.documentElement.classList.add('dark');
+    themeToggle.textContent = '☀️';
+}
+
+// ─── TOAST ───
+function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    const icons = { success: '✅', error: '❌', warning: '⚠️' };
+    t.innerHTML = `<span>${icons[type]||'ℹ️'}</span> ${msg}`;
+    toastContainer.appendChild(t);
+    setTimeout(() => {
+        t.style.transition = 'opacity 0.3s,transform 0.3s';
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(10px)';
+        setTimeout(() => t.remove(), 300);
+    }, 2500);
+}
+window.showToast = showToast;
+
+// ─── IMAGE PREVIEW ───
+imageFileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            imagePreview.querySelector('img').src = ev.target.result;
+            imagePreview.classList.add('show');
+        };
+        reader.readAsDataURL(file);
+    } else {
+        imagePreview.classList.remove('show');
+    }
+});
+
+// ─── UPLOAD TO IMGBB ───
+async function uploadToImageBB(file) {
+    return new Promise((resolve, reject) => {
+        const valid = ['image/jpeg','image/png','image/webp','image/gif'];
+        if (!valid.includes(file.type)) reject(new Error('Invalid file type.'));
+        if (file.size > 5*1024*1024) reject(new Error('Max 5MB.'));
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            const base64 = e.target.result.split(',')[1];
+            const formData = new FormData();
+            formData.append('key', 'f69fb2e400656818bbdb2b33cb144c3f');
+            formData.append('image', base64);
+            try {
+                const res = await fetch('https://api.imgbb.com/1/upload', { method:'POST', body:formData });
+                const data = await res.json();
+                if (data.success) resolve(data.data.url);
+                else reject(new Error(data.error?.message || 'Upload failed'));
+            } catch (err) { reject(err); }
+        };
+        reader.onerror = () => reject(new Error('File read error'));
+        reader.readAsDataURL(file);
+    });
+}
+
+// ─── RENDER ───
+function renderNotifications(notifs) {
+    allNotifs = notifs;
+    if (!notifs || notifs.length === 0) {
+        listEl.innerHTML = `
+            <div class="empty-state">
+                <span class="emoji">📭</span>
+                <h3>No notifications</h3>
+                <p>Be the first to send one.</p>
+            </div>
+        `;
+        counterEl.innerHTML = '<strong>0</strong> notifications';
+        updateBadge(0);
+        return;
+    }
+    counterEl.innerHTML = `<strong>${notifs.length}</strong> notifications`;
+    updateBadge(notifs.length);
+
+    listEl.innerHTML = notifs.map(n => {
+        const iconHtml = n.imageURL 
+            ? `<img src="${n.imageURL}" alt="img" loading="lazy" onerror="this.parentElement.innerHTML='📢'">` 
+            : '📢';
+        const targetLabel = n.targetRole === 'shop' ? '🏪 Shop' : 
+                           n.targetRole === 'customer' ? '👤 Customer' : '🌐 All';
+        const time = n.createdAt?.toDate?.() 
+            ? new Date(n.createdAt.toDate()).toLocaleString('en-US', { hour:'2-digit', minute:'2-digit', day:'numeric', month:'short' })
+            : 'Just now';
+        const sentBy = n.sentBy === 'admin' ? '🛡️ Admin' : 
+                       n.sentBy === 'shop' ? '🏪 Shop' : '👤 Customer';
+        return `
+            <div class="notif-item" data-id="${n.id}">
+                <div class="notif-icon">${iconHtml}</div>
+                <div class="notif-content">
+                    <div class="notif-title">${n.title || 'Untitled'}</div>
+                    <div class="notif-body">${n.body || ''}</div>
+                    <div class="notif-meta">
+                        <span class="tag">${targetLabel}</span>
+                        <span class="tag admin-tag">${sentBy}</span>
+                        <span class="tag">🕒 ${time}</span>
+                        ${n.link ? `<span class="tag">🔗 link</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateBadge(count) {
+    const txt = count > 99 ? '99+' : count;
+    notifBadge.textContent = txt;
+    notifBadge.classList.toggle('show', count > 0);
+}
+
+// ─── REALTIME SUBSCRIBE ───
+function subscribeToNotifications() {
+    if (unsubscribe) unsubscribe();
+    try {
+        const q = query(collection(db, 'notifications'), orderBy('createdAt', 'desc'));
+        unsubscribe = onSnapshot(q, (snapshot) => {
+            const notifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderNotifications(notifs);
+        }, (error) => {
+            console.error('Snapshot error:', error);
+            showToast('⚠️ Realtime error', 'error');
+        });
+    } catch (e) {
+        showToast('⚠️ Subscribe failed: ' + e.message, 'error');
+    }
+}
+
+// ─── MANUAL REFRESH ───
+refreshBtn.addEventListener('click', async () => {
+    try {
+        const q = query(collection(db, 'notifications'), orderBy('createdAt', 'desc'));
+        const snap = await getDocs(q);
+        const notifs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderNotifications(notifs);
+        showToast('↻ Refreshed', 'success');
+    } catch (e) {
+        showToast('Refresh failed', 'error');
+    }
+});
+
+// ─── SEND NOTIFICATION ───
+notifForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    sendBtn.disabled = true;
+    sendBtn.textContent = '⏳ Sending...';
+
+    const title = document.getElementById('notifTitle').value.trim() || 'Update';
+    const body = document.getElementById('notifBody').value.trim();
+    const target = document.getElementById('notifTarget').value;
+    const link = document.getElementById('notifLink').value.trim();
+    const imageFile = document.getElementById('notifImageFile').files[0];
+
+    if (!body) {
+        showToast('Please enter a message', 'error');
+        sendBtn.disabled = false;
+        sendBtn.textContent = '📤 Send Notification';
+        return;
+    }
+
+    try {
+        let imageURL = '';
+        if (imageFile) {
+            showToast('📤 Uploading image...', 'info');
+            imageURL = await uploadToImageBB(imageFile);
+        }
+
+        await setDoc(doc(collection(db, 'notifications')), {
+            title,
+            body,
+            targetRole: target,
+            imageURL: imageURL || '',
+            link: link || '',
+            sentBy: currentUserRole === 'admin' ? 'admin' : 'shop',
+            sentByRole: currentUserRole,
+            isActive: true,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+        showToast('✅ Notification sent!', 'success');
+        imageFileInput.value = '';
+        imagePreview.classList.remove('show');
+        document.getElementById('notifTitle').value = 'Special Offer!';
+        document.getElementById('notifBody').value = 'Get 20% off on all items. Use code SIMHA20.';
+        document.getElementById('notifLink').value = '/shop-listing.html';
+    } catch (err) {
+        showToast('❌ Failed: ' + err.message, 'error');
+    } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = '📤 Send Notification';
+    }
+});
+
+// ─── CLEAR ALL ───
+clearAllBtn.addEventListener('click', async () => {
+    if (currentUserRole !== 'admin') {
+        showToast('Only admin can clear all notifications', 'error');
+        return;
+    }
+    if (!confirm('⚠️ Delete ALL notifications permanently?')) return;
+    try {
+        const q = query(collection(db, 'notifications'));
+        const snap = await getDocs(q);
+        if (snap.empty) { showToast('Nothing to clear', 'warning'); return; }
+        const batch = snap.docs.map(d => deleteDoc(doc(db, 'notifications', d.id)));
+        await Promise.all(batch);
+        showToast(`🗑️ ${batch.length} notifications cleared`, 'success');
+    } catch (e) {
+        showToast('Clear failed: ' + e.message, 'error');
+    }
+});
+
+// ─── CART BADGE ───
+async function updateCartBadge() {
+    const user = auth.currentUser;
+    if (!user) { cartBadge.classList.remove('show'); return; }
+    try {
+        const c = await getDoc(doc(db, 'cart', user.uid));
+        const count = c.exists() ? (c.data().items || []).reduce((s, i) => s + (i.qty || 0), 0) : 0;
+        cartBadge.textContent = count > 99 ? '99+' : count;
+        cartBadge.classList.toggle('show', count > 0);
+    } catch {}
+}
+
+// ─── PROFILE AVATAR ───
+function updateProfile(user) {
+    if (user) {
+        const name = user.displayName || user.email || 'User';
+        const initial = name.charAt(0).toUpperCase();
+        if (user.photoURL) {
+            profileAvatar.innerHTML = `<img src="${user.photoURL}" alt="${name}">`;
+        } else {
+            profileAvatar.textContent = initial;
+        }
+    } else {
+        profileAvatar.textContent = '👤';
+    }
+}
+
+// ─── AUTH ───
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        document.body.innerHTML = `
+            <div style="max-width:400px;margin:60px auto;text-align:center;padding:32px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);">
+                <div style="font-size:48px;">🔐</div>
+                <h2 style="margin:12px 0 6px;font-family:'Playfair Display',serif;">Login required</h2>
+                <p style="color:var(--text-2);"><a href="auth.html" style="color:var(--gold);font-weight:600;">Sign in</a> to continue</p>
+            </div>
+        `;
+        return;
+    }
+
+    updateProfile(user);
+
+    try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (!userDoc.exists()) {
+            currentUserRole = 'customer';
+            roleDisplay.textContent = '👤 Customer';
+            sendCard.style.display = 'none';
+            clearAllBtn.style.display = 'none';
+            subscribeToNotifications();
+            updateCartBadge();
+            return;
+        }
+        const role = userDoc.data().role || 'customer';
+        currentUserRole = role;
+
+        if (role === 'admin') {
+            roleDisplay.textContent = '🛡️ Admin';
+            sendCard.style.display = 'block';
+            clearAllBtn.style.display = 'inline-block';
+        } else if (role === 'shop') {
+            roleDisplay.textContent = '🏪 Shop Owner';
+            sendCard.style.display = 'block';
+            clearAllBtn.style.display = 'none';
+        } else {
+            roleDisplay.textContent = '👤 Customer';
+            sendCard.style.display = 'none';
+            clearAllBtn.style.display = 'none';
+        }
+
+        subscribeToNotifications();
+        updateCartBadge();
+
+    } catch (e) {
+        console.error('Role fetch error:', e);
+        currentUserRole = 'customer';
+        roleDisplay.textContent = '👤 Customer';
+        sendCard.style.display = 'none';
+        clearAllBtn.style.display = 'none';
+        subscribeToNotifications();
+    }
+});
+
+console.log('📨 Notifications — Premium Design with Real-time Feed & Role-based Controls');
+</script>
+</body>
+</html>
