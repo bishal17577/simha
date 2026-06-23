@@ -230,7 +230,7 @@
             <div class="stat-card"><div class="num" id="sUsers">—</div><div class="lbl">👥 Users</div></div>
             <div class="stat-card"><div class="num" id="sOrders">—</div><div class="lbl">🛒 Orders</div></div>
             <div class="stat-card"><div class="num" id="sBanners">—</div><div class="lbl">🖼️ Banners</div></div>
-            <div class="stat-card"><div class="num" id="sCommission" style="color:var(--gold)">—</div><div class="lbl">💰 Commission</div></div>
+            <class="stat-card"><div class="num" id="sCommission" style="color:var(--gold)">—</div><div class="lbl">💰 Commission</div>
         </div>
         <div style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:24px;text-align:center;box-shadow:var(--shadow);">
             <h3 style="font-family:'Playfair Display',serif;font-weight:700;font-size:20px;">Welcome, Admin 👋</h3>
@@ -716,7 +716,7 @@ window.prevImg = (input, pid) => {
     }
 };
 
-/* ── UPLOAD ── */
+/* ── UPLOAD with FALLBACK ── */
 function showProgress(progressId, percentage) {
     const el = $(progressId);
     if (el) {
@@ -740,20 +740,18 @@ async function uploadImg(file, progressId = null) {
         throw new Error('File too large. Maximum size is 10MB.');
     }
 
+    // First, try to use data URL directly (works without external API)
+    // This is more reliable than ImgBB
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = async (e) => {
             try {
-                // Show progress
                 if (progressId) showProgress(progressId, 30);
                 
+                // Try ImgBB first
                 const formData = new FormData();
-                // Using a more reliable ImgBB API key
                 formData.append('key', 'f69fb2e400656818bbdb2b33cb144c3f');
                 formData.append('image', e.target.result.split(',')[1]);
-                
-                // Add expiration for testing
-                formData.append('expiration', '600');
                 
                 if (progressId) showProgress(progressId, 50);
                 
@@ -766,11 +764,11 @@ async function uploadImg(file, progressId = null) {
                 
                 const data = await response.json();
                 
-                if (data.success) {
+                if (data.success && data.data && data.data.url) {
                     if (progressId) showProgress(progressId, 100);
                     resolve(data.data.url);
                 } else {
-                    // If ImgBB fails, try alternative method - create a data URL
+                    // ImgBB failed - use data URL directly
                     console.warn('ImgBB upload failed, using data URL fallback');
                     const dataUrl = e.target.result;
                     if (progressId) showProgress(progressId, 100);
@@ -1007,7 +1005,7 @@ $('createShopForm').addEventListener('submit', async e=>{
         const shopId = makeShopId();
         const shopData = {
             shopId, shopName, ownerName,
-            email: ownerEmail, ownerEmail: ownerEmail, /* store both for dashboard email-match */
+            email: ownerEmail, ownerEmail: ownerEmail,
             phone, whatsappNumber: whatsapp||phone, panNo: pan,
             category, district, address, description,
             shopPhotoURL: photoURL, logoURL,
@@ -1023,7 +1021,7 @@ $('createShopForm').addEventListener('submit', async e=>{
         btn.textContent='Saving shop…';
         await setDoc(doc(db,'shops',shopId), shopData);
 
-        /* ── Auto-upgrade the user's role ── */
+        /* Auto-upgrade user role */
         btn.textContent='Linking user…';
         const usersSnap = await getDocs(
             query(collection(db,'users'), where('email','==',ownerEmail))
@@ -1184,7 +1182,6 @@ $('addProdForm').addEventListener('submit', async e=>{
 window.loadOrders = async function() {
     $('ordersTable').innerHTML = empty('<span class="eico">⏳</span><h3>Loading orders…</h3>');
     try{
-        /* orderBy may fail if index missing — fallback to no-sort */
         let snap;
         try{ snap = await getDocs(query(collection(db,'orders'), orderBy('createdAt','desc'))); }
         catch{ snap = await getDocs(collection(db,'orders')); }
@@ -1529,7 +1526,6 @@ onAuthStateChanged(auth, async user=>{
             setTimeout(()=>window.location.href='index.html',1500);
             return;
         }
-        /* load everything in parallel */
         await Promise.all([
             loadStats(), loadShops(), loadProducts(),
             loadUsers(), loadOrders(), loadBanners(),
